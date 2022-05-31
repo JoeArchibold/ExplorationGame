@@ -81,8 +81,6 @@ function setup() {
                 continue;
             }
 
-            //test comment
-
             //let Noise = noise(i/noiseScale,j/noiseScale);
             //let ranCol = Math.min(300 * Noise, 255);
             let ranCol = Math.min(Math.random()*55+200, 255);
