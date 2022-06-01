@@ -7,7 +7,10 @@ var c = canvas.getContext('2d');
 
 document.addEventListener('keypress', handleKeyPress)
 
-let s = innerHeight/25;
+let displaySize = 15;
+let mapSize = 50;
+
+let s = innerHeight/displaySize;
 let playerX = 12*s;
 let playerY = 12*s;
 
@@ -15,20 +18,32 @@ var tileMap = [];
 
 function drawGame() {
     c.clearRect(0,0,innerHeight,innerHeight);
-    for(let i = 0; i < 25; i++) {
-        for(let j = 0; j < 25; j++) {
+    let X = Math.round(playerX/s);
+    let Y = Math.round(playerY/s);
+    for(let i = 0; i < displaySize; i++) {
+        for(let j = 0; j < displaySize; j++) {
             // if(i==playerX && j==playerY) {
             //     c.fillStyle = 'rgba(0,0,255,1)';
             //     c.fillRect(i*s,j*s,s,s);
             //     continue;
             // }
 
+            let X1 = X-Math.floor(displaySize/2)+i;
+            let Y1 = Y-Math.floor(displaySize/2)+j;
+
+            if(X1 < 0 || X1 > mapSize-1 || Y1 < 0 || Y1 > mapSize-1) {
+                c.fillStyle = 'rgba(35,35,35,.75)';
+                c.fillRect(i*s,j*s,s,s);
+                continue;
+            }
+
             //Draw colored square
-            c.fillStyle = tileMap[i][j].color;
+            console.log()
+            c.fillStyle = tileMap[X1][Y1].color;
             c.fillRect(i*s,j*s,s,s);
 
             //Draw dark square
-            c.fillStyle = 'rgba(40,40,40,' + tileMap[i][j].explored + ')';
+            c.fillStyle = 'rgba(35,35,35,' + tileMap[X1][Y1].explored + ')';
             c.fillRect(i*s,j*s,s,s);
 
             //Draw border lines
@@ -37,22 +52,22 @@ function drawGame() {
     }
     //Draw character
     c.fillStyle = 'rgba(0,0,255,1)';
-    c.fillRect(playerX,playerY,s,s);
+    c.fillRect(Math.floor(displaySize/2)*s,Math.floor(displaySize/2)*s,s,s);
 }
 
 function handleKeyPress(e) {
     let movD = 1;
-    if(e.key == 'w' && playerY > 0) {
+    if(e.key == 'w' && Math.floor(playerY) > 0) {
         playerY -= s/movD;
     }
-    if(e.key == 'd' && playerX < 24*s) {
-        playerX += s/movD;
+    if(e.key == 'd' && playerX < (mapSize-1)*s) {
+        playerX = Math.min(playerX+s/movD, s*(mapSize-1));
     }
-    if(e.key == 'a' && playerX > 0) {
+    if(e.key == 'a' && Math.floor(playerX) > 0) {
         playerX -= s/movD;
     }
-    if(e.key == 's' && playerY < 24*s) {
-        playerY += s/movD;
+    if(e.key == 's' && playerY < (mapSize-1)*s) {
+        playerY = Math.min(playerY+s/movD, s*(mapSize-1));
     }
     if(e.key == 'p') {
         revealMap();
@@ -74,19 +89,19 @@ function setup() {
     let houseCount = 0;
 
     //let noiseScale = 6;
-    for(let i = 0; i < 25; i++) {
+    for(let i = 0; i < mapSize; i++) {
         tileMap[i] = [];
-        for(let j = 0; j < 25; j++) {
+        for(let j = 0; j < mapSize; j++) {
             tileMap[i][j] = {
                 color: "",
                 explored: 1
             }
 
-            if(i > 10 && i < 14 && j > 10 && j < 14) {
-                tileMap[i][j].color = "rgba(0,200,0,1)"
-                tileMap[i][j].explored = 0;
-                continue;
-            }
+            // if(i > 10 && i < 14 && j > 10 && j < 14) {
+            //     tileMap[i][j].color = "rgba(0,200,0,1)"
+            //     tileMap[i][j].explored = 0;
+            //     continue;
+            // }
 
             if(Math.random() * 100 < 3 && houseCount < 10) {
                 tileMap[i][j].color = "rgba(100,0,200,1)"
@@ -122,7 +137,7 @@ function updateVision() {
             let X = Math.round(playerX/s);
             let Y = Math.round(playerY/s);
             if(i==0 && j==0) continue;
-            if(X+i < 0 || X+i > 24 || Y+j > 24 ||Y+j < 0) continue;
+            if(X+i < 0 || X+i > (mapSize-1) || Y+j > mapSize-1 ||Y+j < 0) continue;
             let d = Math.sqrt(i**2+j**2);
             console.log(X, Y)
             let cur = tileMap[X+i][Y+j].explored;
@@ -132,8 +147,8 @@ function updateVision() {
 }
 
 function revealMap() {
-    for(let i = 0; i < 25; i++) {
-        for(let j = 0; j < 25; j++) {
+    for(let i = 0; i < mapSize; i++) {
+        for(let j = 0; j < mapSize; j++) {
             tileMap[i][j].explored = 0;
         }
     }
