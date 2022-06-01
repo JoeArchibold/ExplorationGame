@@ -7,50 +7,62 @@ var c = canvas.getContext('2d');
 
 document.addEventListener('keypress', handleKeyPress)
 
-let playerX = 12;
-let playerY = 12;
+let s = innerHeight/25;
+let playerX = 12*s;
+let playerY = 12*s;
 
 var tileMap = [];
 
-function drawtileMap() {
+function drawGame() {
     c.clearRect(0,0,innerHeight,innerHeight);
-    let s = innerHeight/25;
     for(let i = 0; i < 25; i++) {
         for(let j = 0; j < 25; j++) {
-            if(i==playerX && j==playerY) {
-                c.fillStyle = 'rgba(0,0,255,1)';
-                c.fillRect(i*s,j*s,s,s);
-                continue;
-            }
+            // if(i==playerX && j==playerY) {
+            //     c.fillStyle = 'rgba(0,0,255,1)';
+            //     c.fillRect(i*s,j*s,s,s);
+            //     continue;
+            // }
+
+            //Draw colored square
             c.fillStyle = tileMap[i][j].color;
             c.fillRect(i*s,j*s,s,s);
+
+            //Draw dark square
             c.fillStyle = 'rgba(40,40,40,' + tileMap[i][j].explored + ')';
             c.fillRect(i*s,j*s,s,s);
+
+            //Draw border lines
             c.strokeRect(i*s,j*s,s,s);   
         }
     }
+    //Draw character
+    c.fillStyle = 'rgba(0,0,255,1)';
+    c.fillRect(playerX,playerY,s,s);
 }
 
 function handleKeyPress(e) {
+    let movD = 1;
     if(e.key == 'w' && playerY > 0) {
-        playerY--;
+        playerY -= s/movD;
     }
-    if(e.key == 'd' && playerX < 24) {
-        playerX++;
+    if(e.key == 'd' && playerX < 24*s) {
+        playerX += s/movD;
     }
     if(e.key == 'a' && playerX > 0) {
-        playerX--;
+        playerX -= s/movD;
     }
-    if(e.key == 's' && playerY < 24) {
-        playerY++;
+    if(e.key == 's' && playerY < 24*s) {
+        playerY += s/movD;
     }
     if(e.key == 'p') {
         revealMap();
     }
 
+    console.log(playerX, playerY);
+
     updateVision();
 
-    drawtileMap();
+    drawGame();
 }
 
 var test = 0;
@@ -72,6 +84,7 @@ function setup() {
 
             if(i > 10 && i < 14 && j > 10 && j < 14) {
                 tileMap[i][j].color = "rgba(0,200,0,1)"
+                tileMap[i][j].explored = 0;
                 continue;
             }
 
@@ -99,18 +112,21 @@ function setup() {
     }
 
     updateVision();
-    drawtileMap();
+    drawGame();
 }
 
 function updateVision() {
     let visD = 3;
     for(let i = -visD; i <= visD; i++) {
         for(let j = -visD; j <= visD; j++) {
+            let X = Math.round(playerX/s);
+            let Y = Math.round(playerY/s);
             if(i==0 && j==0) continue;
-            if(playerX+i < 0 || playerX+i > 24 || playerY+j > 24 || playerY+j < 0) continue;
+            if(X+i < 0 || X+i > 24 || Y+j > 24 ||Y+j < 0) continue;
             let d = Math.sqrt(i**2+j**2);
-            let cur = tileMap[playerX+i][playerY+j].explored;
-            tileMap[playerX+i][playerY+j].explored = Math.min(cur ,((d-1.5)/(visD-1)));
+            console.log(X, Y)
+            let cur = tileMap[X+i][Y+j].explored;
+            tileMap[X+i][Y+j].explored = Math.min(cur ,((d-1.5)/(visD-1)));
         }
     }
 }
