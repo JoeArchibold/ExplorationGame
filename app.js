@@ -7,7 +7,7 @@ var c = canvas.getContext('2d');
 document.addEventListener('keypress', handleKeyPress)
 
 //customize map and display size
-let displaySize = 21;
+let displaySize = 52;
 let mapSize = 50;
 
 //set square pixel size
@@ -15,10 +15,12 @@ let s = innerHeight/displaySize;
 
 //Set player starting location
 let playerX = (mapSize/2)*s;
-let playerY = (mapSize-3)*s;
+let playerY = (mapSize/2)*s;
 
-//initialize tile map
+//initialize map stuff
 var tileMap = [];
+var river = [];
+var riverY = [];
 
 function drawGame() {
     c.clearRect(0,0,innerHeight,innerHeight);
@@ -93,13 +95,15 @@ function setup() {
 
     //let noiseScale = 6;
 
+    drawRiver();
+
     //generate map
     for(let i = 0; i < mapSize; i++) {
         tileMap[i] = [];
         for(let j = 0; j < mapSize; j++) {
             tileMap[i][j] = {
                 color: "",
-                explored: 1
+                explored: 1,
             }
 
             // if(i > 10 && i < 14 && j > 10 && j < 14) {
@@ -107,6 +111,17 @@ function setup() {
             //     tileMap[i][j].explored = 0;
             //     continue;
             // }
+
+
+            let quickBool = false;
+            for(let k = 0; k < river.length; k += 2) {
+                if(river[k] == i && river[k+1] == j) {
+                    tileMap[i][j].color = "rgba(0,0,220,1)";
+                    quickBool = true;
+                    break;
+                }
+            }
+            if(quickBool) continue;
 
             if(Math.random() * 100 < 3 && houseCount < 100) {
                 tileMap[i][j].color = "rgba(100,0,200,1)"
@@ -143,7 +158,6 @@ function setup() {
 
     updateVision();
     drawGame();
-    drawRiver();
 }
 
 function updateVision() {
@@ -155,7 +169,8 @@ function updateVision() {
             if(i==0 && j==0) continue;
             if(X+i < 0 || X+i > (mapSize-1) || Y+j > mapSize-1 ||Y+j < 0) continue;
             let d = Math.sqrt(i**2+j**2);
-            console.log(X, Y)
+
+            //Trouble line
             let cur = tileMap[X+i][Y+j].explored;
             tileMap[X+i][Y+j].explored = Math.min(cur ,((d-1.5)/(visD-1)));
         }
@@ -171,19 +186,76 @@ function revealMap() {
 }
 
 function drawRiver() {
-    let riverGen = Math.random()*100;
+    let riverGen = 0;//Math.floor(Math.random()*4);
     console.log(riverGen);
 
-    if(riverGen < 25) {
-
+    if(riverGen == 0) {
+        river = [
+            0, 18,
+            0, 17,
+            0, 16,
+            0, 15,
+            1, 17,
+            1, 16,
+            1, 15,
+            1, 14,
+            2, 15,
+            2, 14,
+            2, 13,
+            3, 14,
+            3, 13,
+            4, 14,
+            4, 13,
+            4, 12,
+            5, 13,
+            5, 12,
+            6, 12,
+            6, 13,
+            7, 11,
+            7, 12, 
+            7, 13,
+            8, 12,
+            8, 11,
+            9, 11,
+            9, 12,
+            9, 10,
+            10, 11,
+            10, 10,
+            10, 9,
+            10, 8,
+            11, 10,
+            11, 9,
+            11, 8,
+            11, 7,
+            11, 6,
+            12, 8,
+            12, 7,
+            12, 6,
+            12, 5,
+            12, 4,
+            12, 3,
+            13, 5,
+            13, 4,
+            13, 3,
+            13, 2,
+            14, 3,
+            14, 2,
+            14, 1,
+            14, 0,
+            15, 1,
+            15, 0
+        ];
     }
-    if(riverGen > 25 && riverGen < 50) {
+    if(riverGen == 1) {
+        river = [
+            27, 47,
+            
+        ];
+    }
+    if(riverGen == 2) {
         
     }
-    if(riverGen > 50 && riverGen < 75) {
-        
-    }
-    if(riverGen > 75) {
+    if(riverGen == 3) {
         
     }
 }
