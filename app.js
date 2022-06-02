@@ -11,8 +11,8 @@ let displaySize = 15;
 let mapSize = 50;
 
 let s = innerHeight/displaySize;
-let playerX = 12*s;
-let playerY = 12*s;
+let playerX = (mapSize/2)*s;
+let playerY = (mapSize/2)*s;
 
 var tileMap = [];
 
