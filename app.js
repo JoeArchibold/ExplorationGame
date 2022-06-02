@@ -7,7 +7,7 @@ var c = canvas.getContext('2d');
 
 document.addEventListener('keypress', handleKeyPress)
 
-let displaySize = 15;
+let displaySize = 25;
 let mapSize = 50;
 
 let s = innerHeight/displaySize;
