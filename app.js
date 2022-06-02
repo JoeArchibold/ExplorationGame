@@ -38,9 +38,12 @@ function drawGame() {
             }
 
             //Draw colored square
-            console.log()
             c.fillStyle = tileMap[X1][Y1].color;
             c.fillRect(i*s,j*s,s,s);
+
+            //miniMap Test
+            c.fillStyle = 'rgba(0,0,80,' + tileMap[X1][Y1] + ')';
+            c.fillRect(15,15,s,s);
 
             //Draw dark square
             c.fillStyle = 'rgba(35,35,35,' + tileMap[X1][Y1].explored + ')';
