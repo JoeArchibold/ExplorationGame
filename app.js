@@ -7,12 +7,12 @@ var c = canvas.getContext('2d');
 
 document.addEventListener('keypress', handleKeyPress)
 
-let displaySize = 15;
+let displaySize = 25;
 let mapSize = 50;
 
 let s = innerHeight/displaySize;
-let playerX = 12*s;
-let playerY = 12*s;
+let playerX = Math.floor(mapSize/2)*s;
+let playerY = Math.floor(mapSize/2)*s;
 
 var tileMap = [];
 
