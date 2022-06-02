@@ -1,33 +1,35 @@
-var canvas = document.getElementById("canv");
 
+//Initialize canvas
+var canvas = document.getElementById("canv");
 canvas.width = innerHeight;
 canvas.height = innerHeight;
-
 var c = canvas.getContext('2d');
-
 document.addEventListener('keypress', handleKeyPress)
 
-let displaySize = 25;
+//customize map and display size
+let displaySize = 21;
 let mapSize = 50;
 
+//set square pixel size
 let s = innerHeight/displaySize;
-let playerX = (mapSize/2)*s;
-let playerY = (mapSize/2)*s;
 
+//Set player starting location
+let playerX = (mapSize/2)*s;
+let playerY = (mapSize-3)*s;
+
+//initialize tile map
 var tileMap = [];
 
 function drawGame() {
     c.clearRect(0,0,innerHeight,innerHeight);
+
+    //calculate player's grid position
     let X = Math.round(playerX/s);
     let Y = Math.round(playerY/s);
+
+    //Draw map
     for(let i = 0; i < displaySize; i++) {
         for(let j = 0; j < displaySize; j++) {
-            // if(i==playerX && j==playerY) {
-            //     c.fillStyle = 'rgba(0,0,255,1)';
-            //     c.fillRect(i*s,j*s,s,s);
-            //     continue;
-            // }
-
             let X1 = X-Math.floor(displaySize/2)+i;
             let Y1 = Y-Math.floor(displaySize/2)+j;
 
@@ -41,10 +43,6 @@ function drawGame() {
             c.fillStyle = tileMap[X1][Y1].color;
             c.fillRect(i*s,j*s,s,s);
 
-            //miniMap Test
-            c.fillStyle = 'rgba(0,0,80,' + tileMap[X1][Y1] + ')';
-            c.fillRect(15,15,s,s);
-
             //Draw dark square
             c.fillStyle = 'rgba(35,35,35,' + tileMap[X1][Y1].explored + ')';
             c.fillRect(i*s,j*s,s,s);
@@ -53,8 +51,10 @@ function drawGame() {
             c.strokeRect(i*s,j*s,s,s);   
         }
     }
+
+
     //Draw character
-    c.fillStyle = 'rgba(0,0,255,1)';
+    c.fillStyle = 'rgba(255,0,0,1)';
     c.fillRect(Math.floor(displaySize/2)*s,Math.floor(displaySize/2)*s,s,s);
 }
 
@@ -92,6 +92,8 @@ function setup() {
     let houseCount = 0;
 
     //let noiseScale = 6;
+
+    //generate map
     for(let i = 0; i < mapSize; i++) {
         tileMap[i] = [];
         for(let j = 0; j < mapSize; j++) {
@@ -106,9 +108,19 @@ function setup() {
             //     continue;
             // }
 
-            if(Math.random() * 100 < 3 && houseCount < 10) {
+            if(Math.random() * 100 < 3 && houseCount < 100) {
                 tileMap[i][j].color = "rgba(100,0,200,1)"
                 houseCount++;
+                continue;
+            }
+
+            if(j > 47) {
+                tileMap[i][j].color = "rgba(0,0,"+(Math.random()*40+210)+",1)";
+                continue;
+            }
+
+            if(j == 47) {
+                tileMap[i][j].color = "rgba(200,200,0,1)";
                 continue;
             }
 
@@ -131,6 +143,7 @@ function setup() {
 
     updateVision();
     drawGame();
+    drawRiver();
 }
 
 function updateVision() {
@@ -154,5 +167,23 @@ function revealMap() {
         for(let j = 0; j < mapSize; j++) {
             tileMap[i][j].explored = 0;
         }
+    }
+}
+
+function drawRiver() {
+    let riverGen = Math.random()*100;
+    console.log(riverGen);
+
+    if(riverGen < 25) {
+
+    }
+    if(riverGen > 25 && riverGen < 50) {
+        
+    }
+    if(riverGen > 50 && riverGen < 75) {
+        
+    }
+    if(riverGen > 75) {
+        
     }
 }
