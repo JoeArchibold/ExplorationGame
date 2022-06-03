@@ -1,4 +1,3 @@
-
 //Initialize canvas
 var canvas = document.getElementById("canv");
 canvas.width = innerHeight;
@@ -560,7 +559,7 @@ function drawRiver() {
     }
     if(riverGen == 3) {
         river = [
-            
+
         ]
     }
 }
